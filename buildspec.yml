@@ -1,0 +1,31 @@
+version: 0.1
+phases:
+install:
+commands:
+- echo installing nodejs...
+- curl -LO https://nodejs.org/dist/v18.0.0/node-v18.0.0-linux-x64.tar.xz
+- tar -xvf node-v18.0.0-linux-x64.tar.xz
+- cp -r node-v18.0.0-linux-x64/bin /usr/
+- cp -r node-v18.0.0-linux-x64/include /usr/
+- cp -r node-v18.0.0-linux-x64/lib /usr/
+- cp -r node-v18.0.0-linux-x64/share /usr/
+- apt-get install -y nodejs
+- echo installing yarn...
+- curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor -o
+/usr/share/keyrings/yarnkey.gpg
+- echo "deb [signed-by=/usr/share/keyrings/yarnkey.gpg]
+https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+- apt update && apt install --no-install-recommends yarn
+pre_build:
+commands:
+- echo installing dependencies...
+- npm install
+build:
+commands:
+- echo building...
+- npm run build
+artifacts:
+files:
+- "**/*"
+discard-paths: no
+base-directory: dist
